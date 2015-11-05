@@ -206,7 +206,7 @@ function addAlien(event: Event): void
 
 	aliens.push(alien);
 
-	this.addChild(alien);
+	terrain.addChild(alien);
 }
 
 function createMissile(event: KeyboardEvent): void
@@ -232,7 +232,7 @@ function checkCollision(event: Event): void
 	{
 		if (aliens[i].x > this.width + (aliens[i].width))
 		{
-			removeChild(aliens[i]);
+			terrain.removeChild(aliens[i]);
 			aliens.splice(i, 1);
 		}
 		for (var j: int = 0; j < missiles.length; j++)
