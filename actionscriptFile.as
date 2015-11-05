@@ -29,8 +29,12 @@ var rightBumping: Boolean = false;
 var upBumping: Boolean = false;
 var downBumping: Boolean = false;
 
-// missile variables
+// missile and alien variables and function
 
+var alienTimer: Timer = new Timer(1000, 2);
+alienTimer.start();
+
+var aliens: Array = new Array();
 var missiles: Array = new Array();
 
 function shootMissile(fireball: MovieClip): void
@@ -50,7 +54,10 @@ stage.addEventListener(Event.ENTER_FRAME, moveHero);
 
 // missile event listeners
 
+alienTimer.addEventListener(TimerEvent.TIMER, addAlien);
 stage.addEventListener(KeyboardEvent.KEY_DOWN, createMissile);
+
+stage.addEventListener(Event.ENTER_FRAME, checkCollision);
 
 // movement functions
 
@@ -189,7 +196,18 @@ function moveHero(event: Event): void
 	trace(yMoveSpeed);
 }
 
-// missile functions
+// missile and alien functions
+
+function addAlien(event: Event): void
+{
+	var alien: Alien = new Alien();
+	alien.x = -20;
+	alien.y = this.height * Math.random();
+
+	aliens.push(alien);
+
+	this.addChild(alien);
+}
 
 function createMissile(event: KeyboardEvent): void
 {
@@ -206,9 +224,36 @@ function createMissile(event: KeyboardEvent): void
 			shootMissile(rFireball);
 		}
 	}
-	/*missiles.push(fireball);
-		trace("shooting");
-		fireball.x = hero.x;
-		fireball.y = hero.y;
-		this.addChild(fireball);*/
+}
+
+function checkCollision(event: Event): void
+{
+	for (var i: int = 0; i < aliens.length; i++)
+	{
+		if (aliens[i].x > this.width + (aliens[i].width))
+		{
+			removeChild(aliens[i]);
+			aliens.splice(i, 1);
+		}
+		for (var j: int = 0; j < missiles.length; j++)
+		{
+			if (aliens[i].hitTestObject(missiles[j]))
+			{
+				if (aliens[i].visible == true)
+				{
+					aliens[i].visible = false;
+					removeChild(missiles[j]);
+
+					trace("removed missile");
+					missiles.splice(j, 1);
+				}
+			}
+			if (missiles[j].x < -50)
+			{
+				removeChild(missiles[j]);
+				missiles.splice(j, 1);
+				trace("removed missile");
+			}
+		}
+	}
 }
