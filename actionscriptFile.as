@@ -3,9 +3,14 @@ import flash.events.MouseEvent;
 import flash.events.Event;
 import flash.geom.Point;
 
+// movement variables
+
 var leftArr: Boolean = false;
 var rightArr: Boolean = false;
 var upArr: Boolean = false;
+
+var facingLeft:Boolean = false;
+var facingRight:Boolean = false;
 
 var xMoveSpeed: Number = 1;
 var yMoveSpeed: Number = 6;
@@ -23,9 +28,21 @@ var rightBumping: Boolean = false;
 var upBumping: Boolean = false;
 var downBumping: Boolean = false;
 
+// missile variables
+
+var missiles: Array = new Array();
+
+// movement event listeners
+
 stage.addEventListener(KeyboardEvent.KEY_DOWN, keyboardHandler);
 stage.addEventListener(KeyboardEvent.KEY_UP, keyboardHandler);
 stage.addEventListener(Event.ENTER_FRAME, moveHero);
+
+// missile event listeners
+
+stage.addEventListener(KeyboardEvent.KEY_DOWN, shootMissile);
+
+// movement functions
 
 function keyboardHandler(event: KeyboardEvent): void
 {
@@ -34,10 +51,14 @@ function keyboardHandler(event: KeyboardEvent): void
 		if (event.keyCode == Keyboard.LEFT)
 		{
 			leftArr = true;
+			facingLeft = true;
+			facingRight = false;
 		}
 		if (event.keyCode == Keyboard.RIGHT)
 		{
 			rightArr = true;
+			facingRight = true;
+			facingLeft = false;
 		}
 		if (event.keyCode == Keyboard.UP)
 		{
@@ -156,4 +177,19 @@ function moveHero(event: Event): void
 	terrain.y += yMoveSpeed;
 
 	trace(yMoveSpeed);
+}
+
+// missile functions
+
+function shootMissile(event: KeyboardEvent): void
+{
+	if (event.keyCode == Keyboard.SPACE)
+	{
+		var fireball: Fireball = new Fireball();
+		missiles.push(fireball);
+		trace("shooting");
+		fireball.x = hero.x;
+		fireball.y = hero.y;
+		this.addChild(fireball);
+	}
 }
