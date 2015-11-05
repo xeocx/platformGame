@@ -2,6 +2,7 @@
 import flash.events.MouseEvent;
 import flash.events.Event;
 import flash.geom.Point;
+import flash.display.MovieClip;
 
 // movement variables
 
@@ -9,8 +10,8 @@ var leftArr: Boolean = false;
 var rightArr: Boolean = false;
 var upArr: Boolean = false;
 
-var facingLeft:Boolean = false;
-var facingRight:Boolean = false;
+var facingLeft: Boolean = false;
+var facingRight: Boolean = false;
 
 var xMoveSpeed: Number = 1;
 var yMoveSpeed: Number = 6;
@@ -32,6 +33,15 @@ var downBumping: Boolean = false;
 
 var missiles: Array = new Array();
 
+function shootMissile(fireball: MovieClip): void
+{
+	missiles.push(fireball);
+	trace("shooting");
+	fireball.x = hero.x;
+	fireball.y = hero.y;
+	this.addChild(fireball);
+}
+
 // movement event listeners
 
 stage.addEventListener(KeyboardEvent.KEY_DOWN, keyboardHandler);
@@ -40,7 +50,7 @@ stage.addEventListener(Event.ENTER_FRAME, moveHero);
 
 // missile event listeners
 
-stage.addEventListener(KeyboardEvent.KEY_DOWN, shootMissile);
+stage.addEventListener(KeyboardEvent.KEY_DOWN, createMissile);
 
 // movement functions
 
@@ -181,15 +191,24 @@ function moveHero(event: Event): void
 
 // missile functions
 
-function shootMissile(event: KeyboardEvent): void
+function createMissile(event: KeyboardEvent): void
 {
 	if (event.keyCode == Keyboard.SPACE)
 	{
-		var fireball: Fireball = new Fireball();
-		missiles.push(fireball);
+		if (facingLeft == true)
+		{
+			var lFireball: LeftFireball = new LeftFireball();
+			shootMissile(lFireball);
+		}
+		if (facingRight == true)
+		{
+			var rFireball: RightFireball = new RightFireball();
+			shootMissile(rFireball);
+		}
+	}
+	/*missiles.push(fireball);
 		trace("shooting");
 		fireball.x = hero.x;
 		fireball.y = hero.y;
-		this.addChild(fireball);
-	}
+		this.addChild(fireball);*/
 }
